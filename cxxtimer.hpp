@@ -29,16 +29,13 @@ SOFTWARE.
 
 #include <chrono>
 
-
 namespace cxxtimer {
 
 /**
  * This class works as a stopwatch.
  */
 class Timer {
-
-public:
-
+   public:
     /**
      * Constructor.
      *
@@ -117,21 +114,16 @@ public:
     template <class duration_t = std::chrono::milliseconds>
     typename duration_t::rep count() const;
 
-private:
-
+   private:
     bool started_;
     bool paused_;
     std::chrono::steady_clock::time_point reference_;
     std::chrono::duration<long double> accumulated_;
 };
 
-}
+}  // namespace cxxtimer
 
-
-inline cxxtimer::Timer::Timer(bool start) :
-        started_(false), paused_(false),
-        reference_(std::chrono::steady_clock::now()),
-        accumulated_(std::chrono::duration<long double>(0)) {
+inline cxxtimer::Timer::Timer(bool start) : started_(false), paused_(false), reference_(std::chrono::steady_clock::now()), accumulated_(std::chrono::duration<long double>(0)) {
     if (start) {
         this->start();
     }
@@ -152,7 +144,7 @@ inline void cxxtimer::Timer::start() {
 inline void cxxtimer::Timer::stop() {
     if (started_ && !paused_) {
         std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-        accumulated_ = accumulated_ + std::chrono::duration_cast< std::chrono::duration<long double> >(now - reference_);
+        accumulated_ = accumulated_ + std::chrono::duration_cast<std::chrono::duration<long double> >(now - reference_);
         paused_ = true;
     }
 }
@@ -173,12 +165,12 @@ typename duration_t::rep cxxtimer::Timer::count() const {
             return std::chrono::duration_cast<duration_t>(accumulated_).count();
         } else {
             return std::chrono::duration_cast<duration_t>(
-                    accumulated_ + (std::chrono::steady_clock::now() - reference_)).count();
+                       accumulated_ + (std::chrono::steady_clock::now() - reference_))
+                .count();
         }
     } else {
         return duration_t(0).count();
     }
 }
-
 
 #endif
