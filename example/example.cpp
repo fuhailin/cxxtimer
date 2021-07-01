@@ -24,7 +24,9 @@ SOFTWARE.
 
 */
 
-#include "cxxtimer.hpp"
+#include <unistd.h>
+
+#include <cxxtimer.hpp>
 #include <iostream>
 #include <string>
 
@@ -41,12 +43,17 @@ int main(int argc, char** argv) {
     std::getline(std::cin, input_1);
 
     // Stop/pause the timer
-    timer.stop();
+    // timer.stop();
 
     // Get the elapsed time
     std::cout << "You took " << timer.count<std::chrono::seconds>() << " seconds." << std::endl;
     std::cout << "You took " << timer.count<std::chrono::milliseconds>() << " milliseconds." << std::endl;
     std::cout << "You took " << timer.count<std::chrono::nanoseconds>() << " nanoseconds." << std::endl;
+
+    sleep(5);
+
+    // Get the elapsed time
+    std::cout << "You took " << timer.gap<std::chrono::milliseconds>() << " milliseconds." << std::endl;
 
     return 0;
 }

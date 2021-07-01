@@ -112,12 +112,24 @@ class Timer {
      * @return  The elapsed time.
      */
     template <class duration_t = std::chrono::milliseconds>
-    typename duration_t::rep count() const;
+    typename duration_t::rep count();
+
+    /**
+     * Return the gapped time between last record.
+     *
+     * @param   duration_t
+     *          The duration type used to return the time gapped. If not
+     *          specified, it returns the time as represented by
+     *          std::chrono::milliseconds.
+     *
+     * @return  The gapped time between last record.
+     */
+    template <class duration_t = std::chrono::milliseconds>
+    typename duration_t::rep gap();
 
    private:
-    bool started_;
-    bool paused_;
-    std::chrono::steady_clock::time_point reference_;
+    bool started_, paused_;
+    std::chrono::steady_clock::time_point reference_, timestamp_, stopstamp_;
     std::chrono::duration<long double> accumulated_;
 };
 
@@ -132,44 +144,54 @@ inline cxxtimer::Timer::Timer(bool start) : started_(false), paused_(false), ref
 inline void cxxtimer::Timer::start() {
     if (!started_) {
         started_ = true;
-        paused_ = false;
         accumulated_ = std::chrono::duration<long double>(0);
-        reference_ = std::chrono::steady_clock::now();
-    } else if (paused_) {
-        reference_ = std::chrono::steady_clock::now();
-        paused_ = false;
     }
+    paused_ = false;
+    timestamp_ = reference_ = std::chrono::steady_clock::now();
 }
 
 inline void cxxtimer::Timer::stop() {
     if (started_ && !paused_) {
-        std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-        accumulated_ = accumulated_ + std::chrono::duration_cast<std::chrono::duration<long double> >(now - reference_);
+        std::chrono::steady_clock::time_point stopstamp_ = std::chrono::steady_clock::now();
+        accumulated_ = accumulated_ + std::chrono::duration_cast<std::chrono::duration<long double> >(stopstamp_ - reference_);
         paused_ = true;
     }
 }
 
 inline void cxxtimer::Timer::reset() {
     if (started_) {
-        started_ = false;
-        paused_ = false;
-        reference_ = std::chrono::steady_clock::now();
+        paused_ = started_ = false;
+        timestamp_ = reference_ = std::chrono::steady_clock::now();
         accumulated_ = std::chrono::duration<long double>(0);
     }
 }
 
 template <class duration_t>
-typename duration_t::rep cxxtimer::Timer::count() const {
+typename duration_t::rep cxxtimer::Timer::count() {
     if (started_) {
         if (paused_) {
             return std::chrono::duration_cast<duration_t>(accumulated_).count();
         } else {
-            return std::chrono::duration_cast<duration_t>(
-                       accumulated_ + (std::chrono::steady_clock::now() - reference_))
-                .count();
+            timestamp_ = std::chrono::steady_clock::now();
+            return std::chrono::duration_cast<duration_t>(accumulated_ + (std::chrono::steady_clock::now() - reference_)).count();
         }
     } else {
         return duration_t(0).count();
+    }
+}
+
+template <class duration_t>
+typename duration_t::rep cxxtimer::Timer::gap() {
+    if (started_) {
+        if (paused_) {
+            return std::chrono::duration_cast<duration_t>(stopstamp_ - timestamp_).count();
+        } else {
+            auto diff = std::chrono::duration_cast<duration_t>(std::chrono::steady_clock::now() - timestamp_).count();
+            timestamp_ = std::chrono::steady_clock::now();
+            return diff;
+        }
+    } else {
+        return this->count<duration_t>();
     }
 }
 
