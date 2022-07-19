@@ -31,34 +31,34 @@ SOFTWARE.
 
 #include "cxxtimer.hpp"
 
+using namespace std;
+using namespace std::chrono;
+
 int main(int argc, char** argv) {
-    // Instantiate cxxtimer::Timer object
-    cxxtimer::Timer timer;
+  // Instantiate cxxtimer::Timer object
+  cxxtimer::Timer timer;
 
-    // Start the timer
-    timer.start();
+  // Start the timer
+  timer.start();
 
-    // Wait for the users
-    std::string input_1;
-    std::cout << "Please, type something and press ENTER to continue: ";
-    std::getline(std::cin, input_1);
+  // Wait for the users
+  string input_1;
+  cout << "Please, type something and press ENTER to continue: ";
+  std::getline(std::cin, input_1);
 
-    // Stop/pause the timer
-    // timer.stop();
+  // Stop/pause the timer
+  // timer.stop();
 
-    // Get the elapsed time
-    std::cout << "You took " << timer.count<std::chrono::seconds>()
-              << " seconds." << std::endl;
-    std::cout << "You took " << timer.count<std::chrono::milliseconds>()
-              << " milliseconds." << std::endl;
-    std::cout << "You took " << timer.count<std::chrono::nanoseconds>()
-              << " nanoseconds." << std::endl;
+  // Get the elapsed time
+  cout << "You took " << timer.count<seconds>() << " seconds." << endl;
+  cout << "You took " << timer.count<milliseconds>() << " milliseconds."
+       << endl;
+  cout << "You took " << timer.count<nanoseconds>() << " nanoseconds." << endl;
 
-    sleep(5);
+  sleep(5);
 
-    // Get the elapsed time
-    std::cout << "You took " << timer.gap<std::chrono::milliseconds>()
-              << " milliseconds." << std::endl;
+  // Get the elapsed time
+  cout << "You took " << timer.gap<milliseconds>() << " milliseconds." << endl;
 
-    return 0;
+  return 0;
 }
