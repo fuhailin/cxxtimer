@@ -55,9 +55,16 @@ int main(int argc, char** argv) {
        << endl;
   cout << "You took " << timer.count<nanoseconds>() << " nanoseconds." << endl;
 
-  sleep(5);
+  sleep(3);
 
   // Get the elapsed time
+  cout << "You took " << timer.gap<milliseconds>() << " milliseconds." << endl;
+
+  // Stop/pause the timer
+  timer.stop();
+  sleep(1);
+  timer.start();
+  sleep(2);
   cout << "You took " << timer.gap<milliseconds>() << " milliseconds." << endl;
 
   return 0;
