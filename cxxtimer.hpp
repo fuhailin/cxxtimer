@@ -135,7 +135,11 @@ class Timer {
 
 }  // namespace cxxtimer
 
-inline cxxtimer::Timer::Timer(bool start) : started_(false), paused_(false), reference_(std::chrono::steady_clock::now()), accumulated_(std::chrono::duration<long double>(0)) {
+inline cxxtimer::Timer::Timer(bool start)
+    : started_(false),
+      paused_(false),
+      reference_(std::chrono::steady_clock::now()),
+      accumulated_(std::chrono::duration<long double>(0)) {
     if (start) {
         this->start();
     }
@@ -152,8 +156,12 @@ inline void cxxtimer::Timer::start() {
 
 inline void cxxtimer::Timer::stop() {
     if (started_ && !paused_) {
-        std::chrono::steady_clock::time_point stopstamp_ = std::chrono::steady_clock::now();
-        accumulated_ = accumulated_ + std::chrono::duration_cast<std::chrono::duration<long double> >(stopstamp_ - reference_);
+        std::chrono::steady_clock::time_point stopstamp_ =
+            std::chrono::steady_clock::now();
+        accumulated_ =
+            accumulated_ +
+            std::chrono::duration_cast<std::chrono::duration<long double>>(
+                stopstamp_ - reference_);
         paused_ = true;
     }
 }
@@ -173,7 +181,10 @@ typename duration_t::rep cxxtimer::Timer::count() {
             return std::chrono::duration_cast<duration_t>(accumulated_).count();
         } else {
             timestamp_ = std::chrono::steady_clock::now();
-            return std::chrono::duration_cast<duration_t>(accumulated_ + (std::chrono::steady_clock::now() - reference_)).count();
+            return std::chrono::duration_cast<duration_t>(
+                       accumulated_ +
+                       (std::chrono::steady_clock::now() - reference_))
+                .count();
         }
     } else {
         return duration_t(0).count();
@@ -184,9 +195,13 @@ template <class duration_t>
 typename duration_t::rep cxxtimer::Timer::gap() {
     if (started_) {
         if (paused_) {
-            return std::chrono::duration_cast<duration_t>(stopstamp_ - timestamp_).count();
+            return std::chrono::duration_cast<duration_t>(stopstamp_ -
+                                                          timestamp_)
+                .count();
         } else {
-            auto diff = std::chrono::duration_cast<duration_t>(std::chrono::steady_clock::now() - timestamp_).count();
+            auto diff = std::chrono::duration_cast<duration_t>(
+                            std::chrono::steady_clock::now() - timestamp_)
+                            .count();
             timestamp_ = std::chrono::steady_clock::now();
             return diff;
         }

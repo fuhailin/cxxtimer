@@ -26,9 +26,10 @@ SOFTWARE.
 
 #include <unistd.h>
 
-#include <cxxtimer.hpp>
 #include <iostream>
 #include <string>
+
+#include "cxxtimer.hpp"
 
 int main(int argc, char** argv) {
     // Instantiate cxxtimer::Timer object
@@ -46,14 +47,18 @@ int main(int argc, char** argv) {
     // timer.stop();
 
     // Get the elapsed time
-    std::cout << "You took " << timer.count<std::chrono::seconds>() << " seconds." << std::endl;
-    std::cout << "You took " << timer.count<std::chrono::milliseconds>() << " milliseconds." << std::endl;
-    std::cout << "You took " << timer.count<std::chrono::nanoseconds>() << " nanoseconds." << std::endl;
+    std::cout << "You took " << timer.count<std::chrono::seconds>()
+              << " seconds." << std::endl;
+    std::cout << "You took " << timer.count<std::chrono::milliseconds>()
+              << " milliseconds." << std::endl;
+    std::cout << "You took " << timer.count<std::chrono::nanoseconds>()
+              << " nanoseconds." << std::endl;
 
     sleep(5);
 
     // Get the elapsed time
-    std::cout << "You took " << timer.gap<std::chrono::milliseconds>() << " milliseconds." << std::endl;
+    std::cout << "You took " << timer.gap<std::chrono::milliseconds>()
+              << " milliseconds." << std::endl;
 
     return 0;
 }
